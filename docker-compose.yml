@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:21.1.1
+    network_mode: host
+    command: ["start-dev", "--import-realm"]
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_HOSTNAME=localhost:8080
+      - KC_HTTP_ENABLED=true
+      - KC_HOSTNAME_STRICT_HTTPS=false
+      - KC_PROXY=edge
+      - KC_LOG_LEVEL=INFO
+    volumes:
+      - ./realm-export.json:/opt/keycloak/data/import/realm.json:ro
+
+  oauth2-proxy:
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.5.1
+    network_mode: host
+    depends_on:
+      - keycloak
+    command: ["--config=/etc/oauth2-proxy.cfg"]
+    volumes:
+      - ./oauth2-proxy.cfg:/etc/oauth2-proxy.cfg:ro

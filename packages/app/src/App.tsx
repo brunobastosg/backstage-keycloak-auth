@@ -30,7 +30,7 @@ import { Root } from './components/Root';
 import {
   AlertDisplay,
   OAuthRequestDialog,
-  SignInPage,
+  ProxiedSignInPage,
 } from '@backstage/core-components';
 import { createApp } from '@backstage/app-defaults';
 import { AppRouter, FlatRoutes } from '@backstage/core-app-api';
@@ -58,7 +58,7 @@ const app = createApp({
     });
   },
   components: {
-    SignInPage: props => <SignInPage {...props} auto providers={['guest']} />,
+    SignInPage: (props) => <ProxiedSignInPage {...props} provider="oauth2Proxy" />,
   },
 });
 
